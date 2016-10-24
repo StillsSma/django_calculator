@@ -1,5 +1,9 @@
 from django.shortcuts import render
-from app.models import Chirp
+from app.models import Profile
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import CreateView, UpdateView
+from django.urls import reverse_lazy
 
 # Create your views here.
 
@@ -12,7 +16,7 @@ def index_view(request):
         operator = request.GET['operator']
         try:
             if operator == "+":
-                answer = (num1) + int(num2)
+                answer = int(num1) + int(num2)
             elif operator == "-":
                 answer = int(num1) - int(num2)
             elif operator == "*":
@@ -34,3 +38,17 @@ def index_view(request):
         return render(request, "index.html", context)
 
     return render(request, "index.html")
+
+
+class UserCreateView(CreateView):
+    model = User
+    success_url = "/"
+    form_class = UserCreationForm
+
+class ProfileUpdateView(UpdateView):
+    template_name = "profile.html"
+    fields = ('access_level',)
+    success_url = reverse_lazy('profile_view')
+
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
