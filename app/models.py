@@ -6,8 +6,8 @@ from django.dispatch import receiver
 
 
 ACCESS_LEVELS = [
-        ('u1', 'user1'),
-        ('u2', 'user2'),
+        ('o', 'owner'),
+        ('u', 'user'),
 
 ]
 
@@ -18,9 +18,23 @@ class Profile(models.Model):
     def __str__(self):
         return str(self.user)
 
+    @property
+    def is_owner(self):
+        return self.access_level == 'o'
+    @property
+    def is_user(self):
+        return self.access_level == 'u'
+
     @receiver(post_save, sender='auth.user')
     def create_profile(sender, **kwargs):
         instance = kwargs["instance"]
         created = kwargs["created"]
         if created:
             Profile.objects.create(user=instance)
+
+class Operation(models.Model):
+    user = models.ForeignKey('auth.User')
+    num1 = models.FloatField()
+    num2= models.FloatField()
+    operator = models.CharField(max_length=1)
+    timestamp = models.DateTimeField(auto_now_add=True)

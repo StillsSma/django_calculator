@@ -5,6 +5,8 @@
 
   <body>
     <h1>Django Calculator</h1>
+    <div class="container">
+
 
     <form class="" method="get">
       {% csrf_token %}
@@ -19,11 +21,14 @@
       <input class="btn btn-default" type="submit" value="Submit">
       </form>
 
-    <ul>
+        </div>
 
+
+  <div class="container">
+    {{num1}} {{operator}} {{num2}} = {{answer}}
+
+  </div>
   </body>
-  {{num1}} {{operator}} {{num2}} = {{answer}}
-
 
 </html>
 {%  endblock %}
